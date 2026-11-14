@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   CommonLessonInput,
   DocumentType,
@@ -6,6 +6,7 @@ import {
   WorkspaceLayoutMode,
 } from '../types/document';
 import { SamplePreset } from '../data/sampleDocuments';
+import { DocOrientation } from '../utils/docBlocks';
 import { LessonInputForm } from './LessonInputForm';
 import { A4DocumentShell } from './preview/A4DocumentShell';
 import { ReadingWorksheetPreview } from './preview/ReadingWorksheetPreview';
@@ -36,10 +37,27 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
   onChangeDocumentType,
   onPrint,
 }) => {
-  const [zoom, setZoom] = useState<number>(0.85);
+  const [zoom, setZoom] = useState<number>(0.78);
+  const [orientation, setOrientation] = useState<DocOrientation>(
+    activeDocument.layoutOptions?.orientation ?? 'portrait'
+  );
+  const [pageCount, setPageCount] = useState<number>(1);
+  const [includeTeacherNotes, setIncludeTeacherNotes] = useState<boolean>(false);
+  const [sessionLayout, setSessionLayout] = useState<'auto' | 'table' | 'cards'>('auto');
+
+  // 프리셋이나 문서 유형이 바뀔 때 용지 방향·배치 옵션을 기본값으로 깔끔하게 초기화
+  useEffect(() => {
+    setOrientation(activeDocument.layoutOptions?.orientation ?? 'portrait');
+    setSessionLayout('auto');
+  }, [activeDocument.id, activeDocument.layoutOptions?.orientation]);
 
   const showForm = layoutMode === 'split' || layoutMode === 'form';
   const showPreview = layoutMode === 'split' || layoutMode === 'preview';
+
+  const effectiveZoom =
+    orientation === 'landscape' && layoutMode === 'split'
+      ? Math.min(zoom, 0.78)
+      : zoom;
 
   return (
     <main className="max-w-[1440px] mx-auto px-6 py-6">
@@ -85,10 +103,18 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
         {showPreview && (
           <section className="min-w-0 w-full">
             <A4DocumentShell
-              zoom={layoutMode === 'preview' ? Math.max(zoom, 0.85) : zoom}
+              documentType={documentType}
+              zoom={effectiveZoom}
               onChangeZoom={setZoom}
               layoutMode={layoutMode}
               onChangeLayoutMode={onChangeLayoutMode}
+              orientation={orientation}
+              onChangeOrientation={setOrientation}
+              pageCount={pageCount}
+              includeTeacherNotes={includeTeacherNotes}
+              onChangeIncludeTeacherNotes={setIncludeTeacherNotes}
+              sessionLayout={sessionLayout}
+              onChangeSessionLayout={setSessionLayout}
               onPrint={onPrint}
               documentLabel={activeDocument.input.topic}
             >
@@ -97,6 +123,9 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
                   key={activeDocument.id}
                   input={activeDocument.input}
                   data={activeDocument.readingWorksheet}
+                  orientation={orientation}
+                  includeTeacherNotes={includeTeacherNotes}
+                  onPageCountChange={setPageCount}
                 />
               ) : null}
 
@@ -105,6 +134,9 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
                   key={activeDocument.id}
                   input={activeDocument.input}
                   data={activeDocument.vocationalProject}
+                  orientation={orientation}
+                  sessionLayoutOverride={sessionLayout}
+                  onPageCountChange={setPageCount}
                 />
               ) : null}
             </A4DocumentShell>

@@ -16,26 +16,57 @@
   }
 }
 
-/* A4 Document Preview Styling */
+/* A4 Paginated Sheet Styling */
 .doc-font {
   font-family: var(--font-doc);
   font-feature-settings: "tnum" on;
 }
 
-.a4-paper {
+.a4-sheet {
   width: 210mm;
   min-height: 297mm;
   background-color: #ffffff;
   color: #111827;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 8px 24px rgba(15, 23, 42, 0.06);
   box-sizing: border-box;
-  padding: 15mm 16mm 16mm 16mm;
+  padding: 13mm 14mm 12mm 14mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   position: relative;
 }
 
-.a4-paper-landscape {
+.a4-sheet-landscape {
   width: 297mm;
   min-height: 210mm;
+}
+
+.a4-sheet-body {
+  flex: 1 1 auto;
+}
+
+.a4-sheet-footer {
+  flex-shrink: 0;
+  margin-top: 4mm;
+  padding-top: 2.5mm;
+  border-top: 1px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 8pt;
+  color: #64748b;
+}
+
+/* Measurement Mirror Container */
+.a4-measure-mirror {
+  position: fixed;
+  left: -100000px;
+  top: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: -1;
+  box-sizing: border-box;
+  background: #ffffff;
 }
 
 .doc-section-block {
@@ -51,14 +82,15 @@
 .doc-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 9.5pt;
-  line-height: 1.5;
+  font-size: 9.2pt;
+  line-height: 1.48;
+  table-layout: fixed;
 }
 
 .doc-table th,
 .doc-table td {
   border: 1px solid #cbd5e1;
-  padding: 6px 8px;
+  padding: 5.5px 7.5px;
   vertical-align: top;
   word-break: keep-all;
   overflow-wrap: break-word;
@@ -93,48 +125,59 @@
 }
 
 /* Print Media Rules */
-@page {
-  size: A4 portrait;
-  margin: 13mm 14mm 14mm 14mm;
-}
-
 @media print {
   html,
   body {
     background-color: #ffffff !important;
     margin: 0 !important;
     padding: 0 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .no-print {
     display: none !important;
   }
 
-  .print-container {
-    width: 100% !important;
+  .print-container,
+  .print-zoom-wrap {
+    width: auto !important;
     max-width: none !important;
     margin: 0 !important;
     padding: 0 !important;
     overflow: visible !important;
     background: #ffffff !important;
-    transform: none !important;
-  }
-
-  .a4-paper {
-    width: 100% !important;
-    min-height: auto !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
     border: none !important;
+    transform: none !important;
+    zoom: 1 !important;
+    display: block !important;
   }
 
-  .print-page-break {
-    break-before: page;
-    page-break-before: always;
+  .a4-pages-stack {
+    gap: 0 !important;
+    display: block !important;
   }
 
-  .print-footer-note {
-    position: running(footer);
+  .a4-sheet {
+    width: 210mm !important;
+    min-height: 296mm !important;
+    height: auto !important;
+    box-shadow: none !important;
+    margin: 0 auto !important;
+    padding: 13mm 14mm 12mm 14mm !important;
+    border: none !important;
+    overflow: visible !important;
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .a4-sheet-landscape {
+    width: 297mm !important;
+    min-height: 209mm !important;
+  }
+
+  .a4-sheet-wrapper:last-child .a4-sheet {
+    break-after: auto !important;
+    page-break-after: auto !important;
   }
 }
