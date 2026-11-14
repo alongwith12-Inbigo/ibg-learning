@@ -1,0 +1,6 @@
+{
+  "name": "인천비즈니스고 교수·학습 자료 설계 비서",
+  "description": "읽걷쓰AI 수업활동지와 직업계고 실무 프로젝트 수업 설계서를 손쉽게 작성하고 A4 양식으로 미리보기 및 인쇄할 수 있는 교사용 자료 설계 도구",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

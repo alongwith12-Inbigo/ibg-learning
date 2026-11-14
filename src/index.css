@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'IBM Plex Sans KR', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    --font-doc: 'Noto Sans KR', 'IBM Plex Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  }
+
+  html,
+  body {
+    font-family: var(--font-sans);
+    background-color: #f4f6f9;
+    color: #0f172a;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* A4 Document Preview Styling */
+.doc-font {
+  font-family: var(--font-doc);
+  font-feature-settings: "tnum" on;
+}
+
+.a4-paper {
+  width: 210mm;
+  min-height: 297mm;
+  background-color: #ffffff;
+  color: #111827;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 8px 24px rgba(15, 23, 42, 0.06);
+  box-sizing: border-box;
+  padding: 15mm 16mm 16mm 16mm;
+  position: relative;
+}
+
+.a4-paper-landscape {
+  width: 297mm;
+  min-height: 210mm;
+}
+
+.doc-section-block {
+  break-inside: avoid-page;
+  page-break-inside: avoid;
+}
+
+.doc-keep-with-next {
+  break-after: avoid-page;
+  page-break-after: avoid;
+}
+
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9.5pt;
+  line-height: 1.5;
+}
+
+.doc-table th,
+.doc-table td {
+  border: 1px solid #cbd5e1;
+  padding: 6px 8px;
+  vertical-align: top;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.doc-table thead th {
+  background-color: #f1f5f9;
+  color: #1e3a5f;
+  font-weight: 600;
+  text-align: left;
+}
+
+.doc-table thead {
+  display: table-header-group;
+}
+
+.doc-table tr {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+/* Writing lines for student worksheets */
+.writing-lines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 27px,
+    #cbd5e1 27px,
+    #cbd5e1 28px
+  );
+  line-height: 28px;
+}
+
+/* Print Media Rules */
+@page {
+  size: A4 portrait;
+  margin: 13mm 14mm 14mm 14mm;
+}
+
+@media print {
+  html,
+  body {
+    background-color: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-container {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    transform: none !important;
+  }
+
+  .a4-paper {
+    width: 100% !important;
+    min-height: auto !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+  }
+
+  .print-page-break {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  .print-footer-note {
+    position: running(footer);
+  }
+}
